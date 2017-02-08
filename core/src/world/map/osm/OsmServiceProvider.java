@@ -16,7 +16,7 @@ public class OsmServiceProvider {
 
     private static OsmService createService() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://overpass-api.de")
+                .baseUrl(OsmConsts.OSM_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

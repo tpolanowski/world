@@ -12,20 +12,21 @@ public class OsmQueryBuilder {
     private static final int TIMEOUT = 30;
     private static final OutputFormat OUTPUT_FORMAT = JSON;
 
-    public static String buildQuery() {
+    public static String buildQuery(OsmQueryParameters params) {
         return new OverpassQuery()
                 .format(OUTPUT_FORMAT)
                 .timeout(TIMEOUT)
                 .filterQuery()
                 .node()
                 .amenity("parking")
-                .tagNot("access", "private")
                 .boundingBox(
-                        47.48047027491862, 19.039797484874725,
-                        47.51331674014172, 19.07404761761427
+                        params.getMapCoords().getSouthernLat(),
+                        params.getMapCoords().getWesternLon(),
+                        params.getMapCoords().getNorthernLat(),
+                        params.getMapCoords().getEasternLon()
                 )
                 .end()
-                .output(OutputVerbosity.BODY, OutputModificator.CENTER, OutputOrder.QT, 100)
+                .output(OutputVerbosity.BODY, OutputModificator.CENTER, OutputOrder.QT, params.getOutputLimit())
                 .build()
                 ;
     }

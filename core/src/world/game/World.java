@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lombok.SneakyThrows;
+import world.map.MapCoords;
 import world.map.osm.OsmQueryBuilder;
 import world.map.osm.OsmQueryExecutor;
+import world.map.osm.OsmQueryParameters;
 import world.map.osm.OsmQueryResult;
 
 public class World extends ApplicationAdapter {
@@ -19,8 +21,19 @@ public class World extends ApplicationAdapter {
 	public void create() {
 		batch = new SpriteBatch();
 		img = new Texture("misty-forest.jpg");
-        System.out.println("i am program");
-        OsmQueryResult result = OsmQueryExecutor.runQuery(OsmQueryBuilder.buildQuery());
+        OsmQueryParameters queryParams = OsmQueryParameters
+                .builder().
+                        mapCoords(
+                            MapCoords
+                                    .builder()
+                                    .easternLon(19.07404761761427)
+                                    .northernLat(47.51331674014172)
+                                    .southernLat(47.48047027491862)
+                                    .westernLon(19.039797484874725)
+                                    .build()
+                        )
+                .build();
+        OsmQueryResult result = OsmQueryExecutor.runQuery(OsmQueryBuilder.buildQuery(queryParams));
     }
 
 	@Override
