@@ -21,19 +21,18 @@ public class World extends ApplicationAdapter {
 	public void create() {
 		batch = new SpriteBatch();
 		img = new Texture("misty-forest.jpg");
-        OsmQueryParameters queryParams = OsmQueryParameters
-                .builder().
-                        mapCoords(
-                            MapCoords
-                                    .builder()
-                                    .easternLon(19.07404761761427)
-                                    .northernLat(47.51331674014172)
-                                    .southernLat(47.48047027491862)
-                                    .westernLon(19.039797484874725)
-                                    .build()
-                        )
+        OsmQueryParameters queryParams = OsmQueryParameters.builder().
+				mapCoords(
+				    MapCoords.builder()
+							.easternLon(19.07404761761427)
+							.northernLat(47.51331674014172)
+							.southernLat(47.48047027491862)
+							.westernLon(19.039797484874725)
+							.build()
+				)
                 .build();
         OsmQueryResult result = OsmQueryExecutor.runQuery(OsmQueryBuilder.buildQuery(queryParams));
+        if (result == null) return; // TODO handle failed query
     }
 
 	@Override

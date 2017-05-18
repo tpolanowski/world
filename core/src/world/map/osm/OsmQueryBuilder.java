@@ -27,7 +27,6 @@ public class OsmQueryBuilder {
                 )
                 .end()
                 .output(OutputVerbosity.BODY, OutputModificator.CENTER, OutputOrder.QT, params.getOutputLimit())
-                .build()
-                ;
+                .build();
     }
 }

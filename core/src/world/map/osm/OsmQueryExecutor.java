@@ -11,6 +11,10 @@ public class OsmQueryExecutor {
         OsmQueryResult result = new OsmQueryResult();
         try {
             result = OsmServiceProvider.get().interpreter(query).execute().body();
+            if (result == null) {
+                Gdx.app.error(LogTags.OSM, "OSM query failed");
+                return null;
+            }
             Gdx.app.log(LogTags.OSM, "OSM query results: " + result.elements);
         } catch (IOException ioe) {
             Gdx.app.error(LogTags.OSM, "OSM query error", ioe);
