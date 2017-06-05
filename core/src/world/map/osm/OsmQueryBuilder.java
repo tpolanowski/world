@@ -15,7 +15,6 @@ public class OsmQueryBuilder {
     public static String buildQuery(OsmQueryParameters params) {
         String result = new OverpassQuery()
 //                .format(OUTPUT_FORMAT)
-                .timeout(TIMEOUT)
                 .boundingBox(
                         params.getMapCoords().getSouthernLat(),
                         params.getMapCoords().getWesternLon(),
