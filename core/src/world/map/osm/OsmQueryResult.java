@@ -75,6 +75,22 @@ public class OsmQueryResult {
             public String operator;
 
         }
+
+        @Override
+        public String toString() {
+            return "Element{" +
+                    "type='" + type + '\'' +
+                    ", id=" + id +
+                    ", lat=" + lat +
+                    ", lon=" + lon +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "OsmQueryResult{" +
+                "elements=" + elements +
+                '}';
+    }
 }
