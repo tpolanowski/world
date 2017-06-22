@@ -29,6 +29,7 @@ public class OsmQueryBuilder {
                 .build();
 
         result = "[out:json]" + result; // hack to add format in proper way, .format() in builder not working
+        System.out.println(result);
         return result;
     }
 }
