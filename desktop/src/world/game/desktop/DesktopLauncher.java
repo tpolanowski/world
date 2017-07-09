@@ -7,8 +7,8 @@ import world.game.WorldGame;
 public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1280;
-		config.height = 720;
+		config.width = 585;
+		config.height = 1040; //TODO resolution is trimmed down for test purposes, should be HD
 		new LwjglApplication(new WorldGame(), config);
 	}
 }

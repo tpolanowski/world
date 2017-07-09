@@ -52,12 +52,11 @@ public class MainMenuScreen implements Screen {
         table.setFillParent(true);
         game.stage.addActor(table);
 
+        addButtons(game, table);
+
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         final TextButton button = new TextButton("Click me!", game.skin);
         table.add(button);
-
-        final TextButton button2 = new TextButton("Click me!", game.skin);
-        table.add(button2);
 
         // Add a listener to the button. ChangeListener is fired when the button's checked state changes, eg when clicked,
         // Button#setChecked() is called, via a key press, etc. If the event.cancel() is called, the checked state will be reverted.
@@ -96,6 +95,29 @@ public class MainMenuScreen implements Screen {
         game.batch = new SpriteBatch();
         game.img = new Texture("misty-forest.jpg");
 
+    }
+
+    private void addButtons(final WorldGame game, Table table) {
+        final TextButton pveButton = new TextButton("PvE", game.skin);
+        table.add(pveButton);
+        table.row();
+        final TextButton pvpButton = new TextButton("PvP", game.skin);
+        table.add(pvpButton);
+        table.row();
+        final TextButton settingsButton = new TextButton("Settings", game.skin);
+        table.add(settingsButton);
+        table.row();
+        final TextButton exitButton = new TextButton("Exit", game.skin);
+        table.add(exitButton);
+        table.row();
+
+        pveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new PvEScreen(game));
+                System.out.println("screen should be pve");
+            }
+        });
     }
 
     @Override
