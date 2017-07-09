@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -23,12 +24,15 @@ import world.util.LogTags;
 import java.io.IOException;
 
 public class MainMenuScreen implements Screen {
-    final WorldGame game;
-
+    private final WorldGame game;
+    private Stage stage;
+    
     @SneakyThrows
     public MainMenuScreen(WorldGame game) {
         this.game = game;
-
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        
         // Generate a 1x1 white texture and store it in the skin named "white".
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -50,7 +54,7 @@ public class MainMenuScreen implements Screen {
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
-        game.stage.addActor(table);
+        stage.addActor(table);
 
         addButtons(game, table);
 
@@ -98,27 +102,64 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addButtons(final WorldGame game, Table table) {
+        addPveButton(game, table);
+        addPvpButton(game, table);
+        addSettingsButton(game, table);
+        addExitButton(game, table);
+    }
+
+    private void addPveButton(final WorldGame game, Table table) {
         final TextButton pveButton = new TextButton("PvE", game.skin);
         table.add(pveButton);
         table.row();
-        final TextButton pvpButton = new TextButton("PvP", game.skin);
-        table.add(pvpButton);
-        table.row();
-        final TextButton settingsButton = new TextButton("Settings", game.skin);
-        table.add(settingsButton);
-        table.row();
-        final TextButton exitButton = new TextButton("Exit", game.skin);
-        table.add(exitButton);
-        table.row();
-
         pveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new PvEScreen(game));
-                System.out.println("screen should be pve");
+                Gdx.app.debug(LogTags.APP, "Changing screen to PvE");
+                game.setScreen(new PveScreen(game));
             }
         });
     }
+
+    private void addPvpButton(final WorldGame game, Table table) {
+        final TextButton pvpButton = new TextButton("PvP", game.skin);
+        table.add(pvpButton);
+        table.row();
+        pvpButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.debug(LogTags.APP, "Changing screen to PvP");
+                game.setScreen(new PvpScreen(game));
+            }
+        });
+    }
+
+    private void addSettingsButton(final WorldGame game, Table table) {
+        final TextButton settingsButton = new TextButton("Settings", game.skin);
+        table.add(settingsButton);
+        table.row();
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.debug(LogTags.APP, "Changing screen to settings");
+                game.setScreen(new SettingsScreen(game));
+            }
+        });
+    }
+
+    private void addExitButton(final WorldGame game, Table table) {
+        final TextButton exitButton = new TextButton("Exit", game.skin);
+        table.add(exitButton);
+        table.row();
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.log(LogTags.APP, "Quitting game...");
+                Gdx.app.exit();
+            }
+        });
+    }
+
 
     @Override
     public void show() {
@@ -129,8 +170,8 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        game.stage.draw();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
     }
 
     @Override
@@ -155,6 +196,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

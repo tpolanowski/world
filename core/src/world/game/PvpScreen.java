@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 
-public class PvEScreen implements Screen {
+public class PvpScreen implements Screen {
     final WorldGame game;
 
-    public PvEScreen(WorldGame game) {
+    public PvpScreen(WorldGame game) {
         this.game = game;
     }
 
