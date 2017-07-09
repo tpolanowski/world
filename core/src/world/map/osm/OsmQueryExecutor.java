@@ -17,6 +17,7 @@ public class OsmQueryExecutor {
                 Gdx.app.error(LogTags.OSM, "OSM query failed: " + response.raw());
             } else {
                 Gdx.app.log(LogTags.OSM, "OSM query results: " + result.elements);
+                Gdx.app.log(LogTags.OSM, "OSM query count: " + result.elements.size());
             }
         } catch (IOException ioe) {
             Gdx.app.error(LogTags.OSM, "OSM query error", ioe);
