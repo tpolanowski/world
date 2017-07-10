@@ -26,21 +26,16 @@ import java.io.IOException;
 public class MainMenuScreen implements Screen {
     private final WorldGame game;
     private Stage stage;
-    
+    private Texture imgTexture;
+    private SpriteBatch batch;
+
     @SneakyThrows
     public MainMenuScreen(WorldGame game) {
         this.game = game;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        
-        // Generate a 1x1 white texture and store it in the skin named "white".
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        game.skin.add("white", new Texture(pixmap));
-
-        // Store the default libgdx font under the name "default".
-        game.skin.add("default", new BitmapFont());
+        batch = new SpriteBatch();
+        imgTexture = new Texture("misty-forest.jpg");
 
         // Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
 //		TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -54,8 +49,10 @@ public class MainMenuScreen implements Screen {
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
+        table.defaults().width(150);
+        table.defaults().minHeight(40);
+        table.defaults().pad(10);
         stage.addActor(table);
-
         addButtons(game, table);
 
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
@@ -96,9 +93,6 @@ public class MainMenuScreen implements Screen {
 //		table.add(new Image(skin.newDrawable("white", Color.RED))).size(64);
 
 
-        game.batch = new SpriteBatch();
-        game.img = new Texture("misty-forest.jpg");
-
     }
 
     private void addButtons(final WorldGame game, Table table) {
@@ -109,9 +103,8 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addPveButton(final WorldGame game, Table table) {
-        final TextButton pveButton = new TextButton("PvE", game.skin);
-        table.add(pveButton);
-        table.row();
+        final TextButton pveButton = new TextButton("PvE", game.skin, "round");
+        table.add(pveButton).row();
         pveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -122,9 +115,8 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addPvpButton(final WorldGame game, Table table) {
-        final TextButton pvpButton = new TextButton("PvP", game.skin);
-        table.add(pvpButton);
-        table.row();
+        final TextButton pvpButton = new TextButton("PvP", game.skin, "round");
+        table.add(pvpButton).row();
         pvpButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -135,9 +127,8 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addSettingsButton(final WorldGame game, Table table) {
-        final TextButton settingsButton = new TextButton("Settings", game.skin);
-        table.add(settingsButton);
-        table.row();
+        final TextButton settingsButton = new TextButton("Settings", game.skin, "round");
+        table.add(settingsButton).row();
         settingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -148,9 +139,8 @@ public class MainMenuScreen implements Screen {
     }
 
     private void addExitButton(final WorldGame game, Table table) {
-        final TextButton exitButton = new TextButton("Exit", game.skin);
-        table.add(exitButton);
-        table.row();
+        final TextButton exitButton = new TextButton("Exit", game.skin, "round");
+        table.add(exitButton).row();
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -159,7 +149,6 @@ public class MainMenuScreen implements Screen {
             }
         });
     }
-
 
     @Override
     public void show() {
@@ -170,13 +159,16 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(imgTexture, 0, 100);
+        batch.end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -197,5 +189,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        imgTexture.dispose();
+        batch.dispose();
     }
 }
