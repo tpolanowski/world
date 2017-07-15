@@ -1,7 +1,8 @@
-package world.map.osm;
+package world.map.osm.query;
 
 import com.badlogic.gdx.Gdx;
 import retrofit2.Response;
+import world.map.osm.service.OsmServiceProvider;
 import world.util.LogTags;
 
 import java.io.IOException;

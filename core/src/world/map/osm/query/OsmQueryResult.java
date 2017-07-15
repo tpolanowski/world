@@ -1,4 +1,4 @@
-package world.map.osm;
+package world.map.osm.query;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,4 +1,4 @@
-package world.map.osm;
+package world.map.osm.query;
 
 import lombok.*;
 import world.map.MapCoords;

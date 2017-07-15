@@ -3,14 +3,20 @@ package world.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import world.map.MapCoords;
-import world.map.osm.OsmQueryBuilder;
-import world.map.osm.OsmQueryExecutor;
-import world.map.osm.OsmQueryParameters;
-import world.map.osm.OsmQueryResult;
+import world.map.osm.*;
 import world.util.LogTags;
 
 import java.io.IOException;
@@ -20,14 +26,52 @@ public class PveScreen implements Screen {
     private Stage stage;
     private SpriteBatch batch;
     private BitmapFont font;
-    private String message = "Not loaded yet.";
+    private String message = "OSM data not loaded yet.";
+    private TiledMap map;
+    private Texture tiles;
+    private TiledMapRenderer renderer;
+    private OrthographicCamera camera;
 
     public PveScreen(WorldGame game) {
         this.game = game;
         stage = new Stage();
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("shade/raw/font-label.fnt"), false);
-        gatherOsmData();
+        //message = OsmDataGatherer.gatherOsmData();
+
+
+
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, (w / h) * 10020, 10200);
+        camera.update();
+
+
+
+
+        map = new TiledMap();
+        tiles = new Texture(Gdx.files.internal("tiles.png"));
+        TextureRegion[][] splitTiles = TextureRegion.split(tiles, 32, 32);
+        MapLayers layers = map.getLayers();
+
+        for (int l = 0; l < 20; l++) {
+            TiledMapTileLayer layer = new TiledMapTileLayer(150, 100, 32, 32);
+            for (int x = 0; x < 150; x++) {
+                for (int y = 0; y < 100; y++) {
+                    int ty = (int)(Math.random() * splitTiles.length);
+                    int tx = (int)(Math.random() * splitTiles[ty].length);
+                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                    cell.setTile(new StaticTiledMapTile(splitTiles[ty][tx]));
+                    layer.setCell(x, y, cell);
+                }
+            }
+            layers.add(layer);
+        }
+
+        renderer = new OrthogonalTiledMapRenderer(map);
+
     }
 
     @Override
@@ -39,9 +83,15 @@ public class PveScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.update();
+        renderer.setView(camera);
+        renderer.render();
+
         batch.begin();
+        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         font.draw(batch, message, 100,100);
         batch.end();
+
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
@@ -69,30 +119,8 @@ public class PveScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        batch.dispose();
+
     }
 
-    private void gatherOsmData() {
-        OsmQueryParameters queryParams = OsmQueryParameters.builder().
-                mapCoords(
-                        MapCoords.builder()
-                                .easternLon(19.919951)
-                                .northernLat(50.064847)
-                                .southernLat(50.060673)
-                                .westernLon(19.912956)
-                                .build()
-                )
-                .build();
-        try {
-            OsmQueryResult resultNature = OsmQueryExecutor.runQuery(OsmQueryBuilder.buildQueryForNature(queryParams));
-            OsmQueryResult resultWater = OsmQueryExecutor.runQuery(OsmQueryBuilder.buildQueryForWater(queryParams));
-            OsmQueryResult resultIndustrial = OsmQueryExecutor.runQuery(OsmQueryBuilder.buildQueryForIndustrial(queryParams));
-            message = "Nature elements: " + resultNature.elements.size() + "elements" +
-                    "\n Water elements: " + resultWater.elements.size() + "elements" +
-                    "\n Industrial elements: " + resultIndustrial.elements.size() + "elements";
-
-        } catch (IOException ioe) {
-            Gdx.app.log(LogTags.OSM, "OSM connection error");
-            message = "OSM connection error :(";
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package world.map.osm;
+package world.map.osm.utils;
 
 public class OsmConsts {
     public static final String OSM_BASE_URL = "http://overpass-api.de";

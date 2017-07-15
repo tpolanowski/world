@@ -1,4 +1,4 @@
-package world.map.osm;
+package world.map.osm.query;
 
 import hu.supercluster.overpasser.library.output.OutputFormat;
 import hu.supercluster.overpasser.library.output.OutputModificator;

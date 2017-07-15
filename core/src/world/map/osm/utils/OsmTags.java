@@ -1,4 +1,4 @@
-package world.map.osm;
+package world.map.osm.utils;
 
 import java.util.Set;
 
