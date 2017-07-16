@@ -21,6 +21,8 @@ import world.util.LogTags;
 
 import java.io.IOException;
 
+import static world.map.graphics.TileGenerator.createTextureRegion;
+
 public class PveScreen implements Screen {
     final WorldGame game;
     private Stage stage;
@@ -45,7 +47,8 @@ public class PveScreen implements Screen {
         float h = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, (w / h) * 10020, 10200);
+        camera.setToOrtho(false, (w / h) * 1030 , 1040);
+        camera.translate(0, -150);
         camera.update();
 
 
@@ -53,17 +56,19 @@ public class PveScreen implements Screen {
 
         map = new TiledMap();
         tiles = new Texture(Gdx.files.internal("tiles.png"));
-        TextureRegion[][] splitTiles = TextureRegion.split(tiles, 32, 32);
+        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Settings.tileSize, Settings.tileSize);
         MapLayers layers = map.getLayers();
 
-        for (int l = 0; l < 20; l++) {
-            TiledMapTileLayer layer = new TiledMapTileLayer(150, 100, 32, 32);
-            for (int x = 0; x < 150; x++) {
-                for (int y = 0; y < 100; y++) {
-                    int ty = (int)(Math.random() * splitTiles.length);
-                    int tx = (int)(Math.random() * splitTiles[ty].length);
+        for (int l = 0; l < 1; l++) {
+            TiledMapTileLayer layer = new TiledMapTileLayer(Settings.tileSize * Settings.horizontalTiles,
+                    Settings.tileSize * Settings.verticalTiles, Settings.tileSize, Settings.tileSize);
+            for (int x = 0; x < Settings.verticalTiles; x++) {
+                for (int y = 0; y < Settings.horizontalTiles; y++) {
+//                    int ty = (int)(Math.random() * splitTiles.length);
+//                    int tx = (int)(Math.random() * splitTiles[ty].length);
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(splitTiles[ty][tx]));
+//                    cell.setTile(new StaticTiledMapTile(splitTiles[ty][tx]));
+                    cell.setTile(createTextureRegion());
                     layer.setCell(x, y, cell);
                 }
             }
