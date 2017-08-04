@@ -1,8 +1,9 @@
 package world.game;
 
 public class Settings {
-    public static final int horizontalTiles = 8;
-    public static final int verticalTiles = 6;
-    public static final int tileSize = 100;
+    public static final int horizontalTiles = 14;
+    public static final int verticalTiles = 9;
+    public static final int tileSize = 64;
+    public static final boolean generateRandomTiles = false;
 
 }

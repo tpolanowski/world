@@ -4,24 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import world.map.MapCoords;
-import world.map.osm.*;
-import world.util.LogTags;
-
-import java.io.IOException;
-
-import static world.map.graphics.TileGenerator.createTextureRegion;
+import world.map.graphics.MapGenerator;
 
 public class PveScreen implements Screen {
     final WorldGame game;
@@ -30,7 +20,6 @@ public class PveScreen implements Screen {
     private BitmapFont font;
     private String message = "OSM data not loaded yet.";
     private TiledMap map;
-    private Texture tiles;
     private TiledMapRenderer renderer;
     private OrthographicCamera camera;
 
@@ -41,41 +30,19 @@ public class PveScreen implements Screen {
         font = new BitmapFont(Gdx.files.internal("shade/raw/font-label.fnt"), false);
         //message = OsmDataGatherer.gatherOsmData();
 
-
-
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, (w / h) * 1030 , 1040);
+        camera.setToOrtho(false, (w / h) * 1030, 1040);
         camera.translate(0, -150);
         camera.update();
 
-
-
-
-        map = new TiledMap();
-        tiles = new Texture(Gdx.files.internal("tiles.png"));
-        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Settings.tileSize, Settings.tileSize);
-        MapLayers layers = map.getLayers();
-
-        for (int l = 0; l < 1; l++) {
-            TiledMapTileLayer layer = new TiledMapTileLayer(Settings.tileSize * Settings.horizontalTiles,
-                    Settings.tileSize * Settings.verticalTiles, Settings.tileSize, Settings.tileSize);
-            for (int x = 0; x < Settings.verticalTiles; x++) {
-                for (int y = 0; y < Settings.horizontalTiles; y++) {
-//                    int ty = (int)(Math.random() * splitTiles.length);
-//                    int tx = (int)(Math.random() * splitTiles[ty].length);
-                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-//                    cell.setTile(new StaticTiledMapTile(splitTiles[ty][tx]));
-                    cell.setTile(createTextureRegion());
-                    layer.setCell(x, y, cell);
-                }
-            }
-            layers.add(layer);
-        }
-
+        map = MapGenerator.generateMap();
         renderer = new OrthogonalTiledMapRenderer(map);
+
+        ParticleEffect particleEffect = new ParticleEffect();
+
 
     }
 
@@ -94,7 +61,7 @@ public class PveScreen implements Screen {
 
         batch.begin();
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
-        font.draw(batch, message, 100,100);
+        font.draw(batch, message, 100, 100);
         batch.end();
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
