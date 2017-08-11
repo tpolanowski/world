@@ -1,7 +1,12 @@
 package world.game;
 
+import box2dLight.ConeLight;
+import box2dLight.DirectionalLight;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,9 +14,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import world.game.graphics.weather.WeatherEffect;
-import world.game.graphics.weather.WeatherEffectType;
+import world.game.graphics.weather.WeatherEffectLoader;
 import world.map.graphics.MapGenerator;
 
 public class PveScreen implements Screen {
@@ -23,7 +29,9 @@ public class PveScreen implements Screen {
     private TiledMap map;
     private TiledMapRenderer renderer;
     private OrthographicCamera camera;
-    private WeatherEffect weatherEffect;
+
+    private DirectionalLight light;
+    private RayHandler rayHandler;
 
     public PveScreen(WorldGame game) {
         this.game = game;
@@ -43,10 +51,18 @@ public class PveScreen implements Screen {
         map = MapGenerator.generateMap();
         renderer = new OrthogonalTiledMapRenderer(map);
 
-        // particle test
-        weatherEffect = new WeatherEffect("rain.particle", WeatherEffectType.RAIN);
 
+        // Create a new Box2D World, this is required.
+        World world = new World(new Vector2(), true);
+        RayHandler.useDiffuseLight(true);
 
+        // Setup the new RayHandler, it will use the same camera as the main game
+        rayHandler = new RayHandler(world);
+
+//        light = new DirectionalLight(rayHandler, 100, new Color(3, 12, 33, 0.4f), -70f);
+
+        PointLight pointLight = new PointLight(rayHandler, 100, new Color(40, 30, 6, 0.7f), 1200, 300, 500 );
+//        ConeLight coneLight = new ConeLight(rayHandler, 100,new Color(20, 12, 10, 0.3f), 1200f, 300, 500, -90f, 180f );
     }
 
     @Override
@@ -63,13 +79,18 @@ public class PveScreen implements Screen {
         renderer.render();
 
         batch.begin();
-        weatherEffect.draw(batch, delta);
+//        WeatherEffectLoader.drawFog(batch, delta);
+        WeatherEffectLoader.drawRain(batch, delta);
+//        WeatherEffectLoader.drawSnow(batch, delta);
+//        WeatherEffectLoader.drawSun(batch, delta);
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         font.draw(batch, message, 100, 100);
         batch.end();
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
+        rayHandler.setCombinedMatrix(camera);
+        rayHandler.updateAndRender();
     }
 
     @Override
@@ -96,6 +117,8 @@ public class PveScreen implements Screen {
     public void dispose() {
         stage.dispose();
         batch.dispose();
+        rayHandler.dispose();
+        light.dispose();
 
     }
 

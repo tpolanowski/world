@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class SpecialEffect {
-    private static final String PARTICLE_PATH = "particle";
+    protected static final String PARTICLE_PATH = "particle";
     protected ParticleEffect particleEffect;
 
     public SpecialEffect(String effectFilename) {
