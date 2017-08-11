@@ -5,13 +5,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import world.game.graphics.weather.WeatherEffect;
+import world.game.graphics.weather.WeatherEffectType;
 import world.map.graphics.MapGenerator;
 
 public class PveScreen implements Screen {
@@ -23,7 +23,7 @@ public class PveScreen implements Screen {
     private TiledMap map;
     private TiledMapRenderer renderer;
     private OrthographicCamera camera;
-    private ParticleEffect particleEffect;
+    private WeatherEffect weatherEffect;
 
     public PveScreen(WorldGame game) {
         this.game = game;
@@ -44,11 +44,8 @@ public class PveScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
 
         // particle test
-        TextureAtlas particleAtlas = new TextureAtlas();
-        particleEffect = new ParticleEffect();
-        particleEffect.load(Gdx.files.internal("particle/snow.particle"), Gdx.files.internal("particle"));
-        particleEffect.start();
-        particleEffect.setPosition(200, 200);
+        weatherEffect = new WeatherEffect("rain.particle", WeatherEffectType.RAIN);
+
 
     }
 
@@ -66,8 +63,7 @@ public class PveScreen implements Screen {
         renderer.render();
 
         batch.begin();
-        particleEffect.draw(batch, delta);
-        if (particleEffect.isComplete()) particleEffect.start();
+        weatherEffect.draw(batch, delta);
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
         font.draw(batch, message, 100, 100);
         batch.end();
