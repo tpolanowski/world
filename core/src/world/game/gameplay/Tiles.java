@@ -1,31 +1,24 @@
 package world.game.gameplay;
 
-public class Tiles {
-    private float totalX;
-    private float totalY;
-    private int count;
+import world.game.Settings;
 
+public class Tiles {
     private Coord[][] coords;
 
-    public Tiles (float totalX, float totalY, int count) {
-        this.totalX = totalX;
-        this.totalY = totalY;
-        this.count = count;
-
-        coords = new Coord[count][count];
+    public Tiles () {
+        coords = new Coord[Settings.horizontalTiles][Settings.verticalTiles];
 
         int initX = 0;
-        int initY = 30;
+        int initY = Settings.tileSize*2+10;
+        int fineTune = Settings.tileSize/4-2;
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < Settings.horizontalTiles; i++) {
 
-            float baseX = initX + i*21.58f;
-            float baseY = initY + i*20.47f;
-            for (int j = 0; j < count; j++) {
-                //System.out.println("test ("+i+", "+j+")");
+            float baseX = initX + i*Settings.tileSize + fineTune-4;
+            float baseY = initY + fineTune;
+            for (int j = 0; j < Settings.verticalTiles; j++) {
                 if (j != 0) {
-                    coords[i][j] = new Coord(baseX +j*21.58f, baseY
-                            -j*20.47f , i, j);
+                    coords[i][j] = new Coord(baseX, baseY +j*Settings.tileSize , i, j);
                 }
                 else {
                     coords[i][j] = new Coord(baseX, baseY, i, j);
@@ -33,11 +26,11 @@ public class Tiles {
             }
         }
 
-//        for(Coord[] coordOuter : coords) {
-//            for(Coord coordInner : coordOuter) {
-//                System.out.println(coordInner);
-//            }
-//        }
+        for(Coord[] coordOuter : coords) {
+            for(Coord coordInner : coordOuter) {
+                System.out.println(coordInner);
+            }
+        }
     }
 
     public Coord getCoord(int x, int y) {
@@ -46,15 +39,5 @@ public class Tiles {
 
     public Coord[][] getCoords() {
         return coords;
-    }
-
-    @Override
-    public String toString() {
-        return "Tiles{" +
-                "totalX=" + totalX +
-                ", totalY=" + totalY +
-                ", count=" + count +
-                ", coords=" + coords +
-                '}';
     }
 }

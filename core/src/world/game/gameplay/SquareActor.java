@@ -3,6 +3,7 @@ package world.game.gameplay;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import world.game.Settings;
 
 public class SquareActor extends Actor{
     ShapeRenderer shapeRenderer;
@@ -31,8 +32,8 @@ public class SquareActor extends Actor{
         shapeRenderer = new ShapeRenderer();
         //shapeRenderer.setProjectionMatrix(cameraCombined);
         projectionMatrixSet = false;
-        super.setWidth(50);
-        super.setHeight(40);
+        super.setWidth(Settings.tileSize);
+        super.setHeight(Settings.tileSize);
     }
 
     /**

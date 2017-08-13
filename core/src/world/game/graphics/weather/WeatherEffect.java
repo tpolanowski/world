@@ -3,6 +3,7 @@ package world.game.graphics.weather;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import world.game.Settings;
 import world.game.graphics.SpecialEffect;
 import world.game.graphics.utils.SpecialEffectPool;
 
@@ -24,7 +25,7 @@ public class WeatherEffect extends SpecialEffect {
 
     public void draw(SpriteBatch batch, float delta) {
         for (ParticleEffect pe : particleEffects) {
-            drawAt(pe, batch, delta, random.nextInt(576), random.nextInt(740) + 300);
+            drawAt(pe, batch, delta, random.nextInt(Settings.horizontalScreen), random.nextInt(Settings.verticalScreen-300) + 300);
         }
     }
 
@@ -41,7 +42,7 @@ public class WeatherEffect extends SpecialEffect {
                 effectCount = random.nextInt(50) + 5;
                 break;
             case FOG:
-                effectCount = random.nextInt(10) + 2;
+                effectCount = random.nextInt(6) + 2;
                 break;
             case SUN:
                 effectCount = random.nextInt(30) + 5;

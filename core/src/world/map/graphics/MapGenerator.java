@@ -28,10 +28,10 @@ public class MapGenerator {
         MapLayers layers = map.getLayers();
 
         for (int l = 0; l < 1; l++) {
-            TiledMapTileLayer layer = new TiledMapTileLayer(Settings.tileSize * Settings.horizontalTiles,
-                    Settings.tileSize * Settings.verticalTiles, Settings.tileSize, Settings.tileSize);
-            for (int x = 0; x < Settings.verticalTiles; x++) {
-                for (int y = 0; y < Settings.horizontalTiles; y++) {
+            TiledMapTileLayer layer = new TiledMapTileLayer(Settings.tileSize * Settings.verticalTiles,
+                    Settings.tileSize * Settings.horizontalTiles, Settings.tileSize, Settings.tileSize);
+            for (int x = 0; x < Settings.horizontalTiles; x++) {
+                for (int y = 0; y < Settings.verticalTiles; y++) {
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                     cell.setTile(generateTile());
                     layer.setCell(x, y, cell);
