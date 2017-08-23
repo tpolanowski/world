@@ -177,6 +177,7 @@ public class PveScreen implements Screen, InputProcessor{
 
         rayHandler.setCombinedMatrix(camera);
         rayHandler.updateAndRender();
+        turn();
     }
 
     @Override
@@ -293,7 +294,7 @@ public class PveScreen implements Screen, InputProcessor{
             }
             else {
                 int rand1 = random.nextInt(1)-1;
-                destX = lichActor.x + 4;
+                destX = lichActor.x ;
                 destY = lichActor.y + rand1;
             }
 
